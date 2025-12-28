@@ -1,7 +1,7 @@
 use crate::application::dto::{LoginRequest, RegisterRequest};
 use crate::AuthState;
 use axum::{extract::State, http::HeaderMap, response::IntoResponse, Json};
-use rust_reborn_core::{utils::response::created, validation::validate, AppError, Result};
+use rust_reborn_contracts::{common::response::created, validation::validate, AppError, Result};
 
 pub async fn register(
     State(state): State<AuthState>,

@@ -1,4 +1,4 @@
-use rust_reborn_core::Result;
+use rust_reborn_contracts::Result;
 
 pub trait PasswordHasher: Send + Sync {
     fn hash(&self, raw: &str) -> Result<String>;

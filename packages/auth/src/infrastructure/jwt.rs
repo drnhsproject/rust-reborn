@@ -1,6 +1,6 @@
 use crate::domain::entities::User;
 use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation};
-use rust_reborn_core::{config::JwtConfig, AppError, Result};
+use rust_reborn_contracts::{config::JwtConfig, AppError, Result};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 

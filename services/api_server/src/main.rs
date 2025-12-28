@@ -7,12 +7,15 @@ use axum::{
     Json, Router,
 };
 use rust_reborn_auth::AuthState;
-use rust_reborn_core::config::{AppConfig, DatabaseConfig, JwtConfig, MediaConfig, ServerConfig};
+use rust_reborn_contracts::config::{AppConfig, DatabaseConfig, JwtConfig, MediaConfig, ServerConfig};
 use serde_json::json;
 use sqlx::postgres::PgPoolOptions;
 use std::time::Duration;
 use tower_http::cors::CorsLayer;
 use tower_http::trace::TraceLayer;
+
+mod routes;
+
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
@@ -76,7 +79,6 @@ async fn main() -> anyhow::Result<()> {
         .allow_headers([AUTHORIZATION, ACCEPT, CONTENT_TYPE]);
 
     // Build router
-    // Build router
     let db_routes = Router::new()
         .route("/api/health", get(health_check))
         .route("/api/db-check", get(db_check))
@@ -84,7 +86,8 @@ async fn main() -> anyhow::Result<()> {
 
     let app = Router::new()
         .merge(db_routes)
-        .nest("/api/auth", rust_reborn_auth::create_routes(auth_state))
+        .nest("/api/auth", routes::auth_routes(auth_state.clone()))
+        .nest("/api", routes::product_routes(auth_state))
         .layer(TraceLayer::new_for_http())
         .layer(cors);
 
@@ -97,9 +100,14 @@ async fn main() -> anyhow::Result<()> {
     println!("\n🦀 Rust-Reborn API Server is running!");
     println!("   → Address: http://{}", addr);
     println!("   → Health Check: http://{}/api/health", addr);
-    println!("   → Auth Register: POST http://{}/api/auth/register", addr);
-    println!("   → Auth Login: POST http://{}/api/auth/login", addr);
-    println!("   → Press Ctrl+C to stop\n");
+    println!("\n📝 Auth Endpoints:");
+    println!("   → Register: POST http://{}/api/auth/register", addr);
+    println!("   → Login: POST http://{}/api/auth/login", addr);
+    println!("\n📦 Product Endpoints:");
+    println!("   → List Products (Public): GET http://{}/api/products", addr);
+    println!("   → Get Product (Public): GET http://{}/api/products/:id", addr);
+    println!("   → Create Product (Auth Required): POST http://{}/api/products", addr);
+    println!("\n   → Press Ctrl+C to stop\n");
 
     axum::serve(listener, app).await?;
 

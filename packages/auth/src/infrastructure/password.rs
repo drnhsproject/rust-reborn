@@ -1,7 +1,7 @@
 use crate::application::port::password_hasher::PasswordHasher;
 use async_trait::async_trait;
 use bcrypt::{hash, verify, DEFAULT_COST};
-use rust_reborn_core::{AppError, Result};
+use rust_reborn_contracts::{AppError, Result};
 
 #[derive(Clone)]
 pub struct PasswordService;

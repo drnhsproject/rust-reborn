@@ -1,8 +1,4 @@
-pub mod config;
-pub mod error;
-pub mod telemetry;
-pub mod validation;
-pub mod utils;
+pub mod handlers;
+pub mod product;
 
-pub use error::{AppError, Result};
-pub use config::AppConfig;
+pub use handlers::create_product_routes;

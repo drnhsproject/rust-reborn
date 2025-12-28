@@ -6,7 +6,7 @@ use crate::domain::entities::User;
 use crate::domain::repositories::user_repository::UserRepository;
 use crate::domain::value_objects::{Email, HashedPassword, Password};
 use crate::infrastructure::{jwt::JwtService, password::PasswordService};
-use rust_reborn_core::{AppError, Result};
+use rust_reborn_contracts::{AppError, Result};
 use std::sync::Arc;
 use uuid::Uuid;
 

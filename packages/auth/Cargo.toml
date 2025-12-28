@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-rust-reborn-core = { path = "../core" }
+rust-reborn-contracts = { path = "../../shared/contracts" }
 axum = { workspace = true }
 tower = { workspace = true }
 tokio = { workspace = true }

@@ -7,7 +7,7 @@ pub struct Password {
 
 impl Password {
     pub fn new(value: String) -> Result<Self, validator::ValidationError> {
-        rust_reborn_core::validation::custom::validate_password_strength(&value)?;
+        rust_reborn_contracts::validation::custom::validate_password_strength(&value)?;
         Ok(Self { value })
     }
 

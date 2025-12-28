@@ -1,6 +1,6 @@
 use crate::domain::{entities::User, repositories::UserRepository};
 use async_trait::async_trait;
-use rust_reborn_core::Result;
+use rust_reborn_contracts::Result;
 use sqlx::PgPool;
 use uuid::Uuid;
 

@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+rust-reborn-auth = { path = "../auth" }
+rust-reborn-contracts = { path = "../../shared/contracts" }
 anyhow = { workspace = true }
 thiserror = { workspace = true }
 serde = { workspace = true }
