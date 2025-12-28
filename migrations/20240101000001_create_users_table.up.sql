@@ -1,4 +1,3 @@
--- Create users table
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE users (
@@ -14,6 +13,7 @@ CREATE TABLE users (
     last_login_at TIMESTAMP WITH TIME ZONE
 );
 
+-- Create indexes
 CREATE INDEX idx_users_email ON users(email);
 CREATE INDEX idx_users_username ON users(username);
 CREATE INDEX idx_users_created_at ON users(created_at DESC);

@@ -14,13 +14,13 @@ setup: ## Initial project setup
 	@echo "✅ Setup complete!"
 
 dev: ## Run development server with hot reload
-	@cargo watch -x 'run --bin api-server' || cargo run --bin api-server
+	@cargo watch -x 'run --bin api_server' || cargo run --bin api_server
 
 build: ## Build release binary
-	@cargo build --release --bin api-server
+	@cargo build --release --bin api_server
 
 run: ## Run the API server
-	@cargo run --bin api-server
+	@cargo run --bin api_server
 
 test: ## Run all tests
 	@cargo test

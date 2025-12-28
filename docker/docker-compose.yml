@@ -1,0 +1,23 @@
+services:
+  api-server:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: rust-reborn-api
+    environment:
+      DATABASE_URL: postgresql://admin:password@postgres_db:5432/rust_reborn
+      REDIS_URL: redis://redis_container:6379
+      RUST_ENV: development
+      RUST_LOG: info,rust_reborn_api=debug
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - reborn_net
+
+networks:
+  reborn_net:
+    external: true

@@ -1,28 +1,47 @@
+# Rust
 /target/
 **/*.rs.bk
 *.pdb
 Cargo.lock
+
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 .DS_Store
+
+# Environment
 .env
 .env.local
 .env.*.local
+
+# Database
 *.db
 *.db-shm
 *.db-wal
+
+# Uploads
 /uploads/
 /temp/
+
+# Logs
 *.log
 logs/
+
+# Config
 config/local.yaml
 config/production.yaml
+
+# Documentation
 /target/doc/
+
+# Coverage
 /coverage/
 *.profraw
 *.profdata
+
+# Other
 .cargo/
 .sqlx/
