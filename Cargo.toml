@@ -1,0 +1,35 @@
+[workspace]
+members = [
+    "packages/core",
+    "packages/auth",
+    "services/api-server",
+    "shared/contracts",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+license = "MIT"
+
+[workspace.dependencies]
+axum = { version = "0.7", features = ["macros", "multipart"] }
+tokio = { version = "1.35", features = ["full"] }
+tower = { version = "0.4", features = ["util"] }
+tower-http = { version = "0.5", features = ["trace", "cors", "fs"] }
+sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "migrate"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+validator = { version = "0.18", features = ["derive"] }
+anyhow = "1.0"
+thiserror = "1.0"
+async-trait = "0.1"
+jsonwebtoken = "9.2"
+bcrypt = "0.15"
+uuid = { version = "1.6", features = ["v4", "serde"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+config = "0.14"
+dotenvy = "0.15"
+chrono = { version = "0.4", features = ["serde"] }
