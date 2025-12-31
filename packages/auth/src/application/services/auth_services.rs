@@ -65,7 +65,7 @@ impl<R: UserRepository> AuthService<R> {
 
     pub async fn login(&self, request: LoginRequest) -> Result<AuthResponse> {
         let user = self
-            .find_user_by_username(&request.username)
+            .find_user_by_username_or_email(&request.username)
             .await?
             .ok_or_else(|| AppError::unauthorized("Invalid credentials"))?;
 
@@ -156,13 +156,13 @@ impl<R: UserRepository> AuthService<R> {
         Ok(())
     }
 
-    async fn find_user_by_username(&self, username: &str) -> Result<Option<User>> {
+    async fn find_user_by_username_or_email(&self, input: &str) -> Result<Option<User>> {
         // Try email first
-        if let Some(user) = self.user_repository.find_by_email(username).await? {
+        if let Some(user) = self.user_repository.find_by_email(input).await? {
             return Ok(Some(user));
         }
 
         // Try username
-        self.user_repository.find_by_username(username).await
+        self.user_repository.find_by_username(input).await
     }
 }
