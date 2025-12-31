@@ -1,7 +1,7 @@
 use crate::domain::{entities::User, repositories::UserRepository};
 use async_trait::async_trait;
 use rust_reborn_contracts::Result;
-use sqlx::PgPool;
+use sqlx::{query, PgPool};
 use uuid::Uuid;
 
 #[derive(Clone)]
@@ -38,8 +38,30 @@ impl UserRepository for PostgresUserRepository {
         Ok(user.clone())
     }
 
-    async fn save(&self, _user: User) -> Result<()> {
-        // TODO: Implement actual DB insert
+    async fn save(&self, user: User) -> Result<()> {
+        query!(
+            r#"
+            INSERT INTO users (
+                id,
+                email,
+                username,
+                full_name,
+                password_hash,
+                is_verified,
+                created_at
+            )
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            "#,
+            user.id,
+            user.email.value(),          // Email VO → &str
+            user.username,
+            user.full_name,
+            user.password.value(),       // HashedPassword VO → &str
+            user.is_verified,
+            user.created_at,
+        )
+        .execute(&self.pool)
+        .await?;
         Ok(())
     }
 }
