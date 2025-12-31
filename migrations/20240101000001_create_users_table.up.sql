@@ -8,6 +8,13 @@ CREATE TABLE users (
     full_name VARCHAR(255),
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     is_verified BOOLEAN NOT NULL DEFAULT FALSE,
+    activation_key VARCHAR(255),
+    reset_key VARCHAR(255),
+    reset_key_expires_at TIMESTAMP WITH TIME ZONE,
+    reset_date TIMESTAMP WITH TIME ZONE,
+    status INT NOT NULL DEFAULT 1,
+    created_by VARCHAR(255),
+    updated_by VARCHAR(255),
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
     last_login_at TIMESTAMP WITH TIME ZONE
