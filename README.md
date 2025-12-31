@@ -68,18 +68,29 @@ cp .env.example .env
 
 ### 4. Run Migrations
 
+install sqlx-cli in your terminal:
 ```bash
-cargo install sqlx-cli --no-default-features --features postgres
+cargo install sqlx-cli
 sqlx migrate run
 ```
 
 ### 5. Run the Server
 
 ```bash
-cargo run --bin api_server
+cargo run
 ```
 
 The server will start at `http://localhost:8000`
+
+if you want using watcher, you can install:
+```bash
+cargo install cargo-watch
+```
+
+and run using:
+```bash
+cargo watch -x "run"
+```
 
 ## 📚 API Documentation
 
