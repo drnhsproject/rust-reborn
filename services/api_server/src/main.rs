@@ -7,7 +7,7 @@ use axum::{
     Json, Router,
 };
 use rust_reborn_auth::AuthState;
-use rust_reborn_contracts::config::{AppConfig, DatabaseConfig, JwtConfig, MediaConfig, ServerConfig};
+use rust_reborn_contracts::config::AppConfig;
 use serde_json::json;
 use sqlx::postgres::PgPoolOptions;
 use std::time::Duration;
@@ -24,37 +24,11 @@ async fn main() -> anyhow::Result<()> {
 
     tracing::info!("🚀 Starting Rust-Reborn API Server");
 
-    // Load configuration manually from env to be safe
-    let database_url = std::env::var("DATABASE_URL")
-        .unwrap_or_else(|_| "postgres://admin:password@localhost:5432/rust_reborn".to_string());
-
-    let jwt_secret = std::env::var("JWT_SECRET").unwrap_or_else(|_| "supersecretkey".to_string());
-
-    let config = AppConfig {
-        server: ServerConfig {
-            host: "0.0.0.0".to_string(),
-            port: 3000,
-            environment: "development".to_string(),
-        },
-        database: DatabaseConfig {
-            url: database_url.clone(),
-            max_connections: 5,
-            min_connections: 1,
-        },
-        jwt: JwtConfig {
-            secret: jwt_secret,
-            expiration_hours: 24,
-            refresh_expiration_days: 7,
-        },
-        media: MediaConfig {
-            upload_dir: "uploads".to_string(),
-            max_file_size: 10 * 1024 * 1024,
-            allowed_extensions: vec!["jpg".to_string(), "png".to_string()],
-        },
-    };
+    // Load configuration
+    let config = AppConfig::load().expect("Failed to load configuration");
 
     // Create database connection pool
-    tracing::info!("🔌 Connecting to database at {}...", database_url);
+    tracing::info!("🔌 Connecting to database at {}...", config.database.url);
 
     let pool = PgPoolOptions::new()
         .max_connections(config.database.max_connections)
@@ -100,13 +74,6 @@ async fn main() -> anyhow::Result<()> {
     println!("\n🦀 Rust-Reborn API Server is running!");
     println!("   → Address: http://{}", addr);
     println!("   → Health Check: http://{}/api/health", addr);
-    println!("\n📝 Auth Endpoints:");
-    println!("   → Register: POST http://{}/api/auth/register", addr);
-    println!("   → Login: POST http://{}/api/auth/login", addr);
-    println!("\n📦 Product Endpoints:");
-    println!("   → List Products (Public): GET http://{}/api/products", addr);
-    println!("   → Get Product (Public): GET http://{}/api/products/:id", addr);
-    println!("   → Create Product (Auth Required): POST http://{}/api/products", addr);
     println!("\n   → Press Ctrl+C to stop\n");
 
     axum::serve(listener, app).await?;
