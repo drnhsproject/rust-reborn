@@ -54,7 +54,12 @@ impl<R: UserRepository> AuthService<R> {
         self.user_repository.save(user.clone()).await?;
 
         Ok(RegisterResponse {
-            user: user.into()
+            id: user.id,
+            email: user.email.value().to_string(),
+            username: user.username,
+            full_name: user.full_name,
+            is_verified: user.is_verified,
+            created_at: user.created_at,
         })
     }
 

@@ -1,7 +1,27 @@
+use chrono::{DateTime, Utc};
 use serde::Serialize;
-use crate::UserResponse;
+use uuid::Uuid;
+use crate::User;
 
 #[derive(Debug, Serialize)]
 pub struct RegisterResponse {
-    pub user: UserResponse,
+    pub id: Uuid,
+    pub email: String,
+    pub username: String,
+    pub full_name: Option<String>,
+    pub is_verified: bool,
+    pub created_at: DateTime<Utc>,
+}
+
+impl From<User> for RegisterResponse {
+    fn from(user: User) -> Self {
+        Self {
+            id: user.id,
+            email: user.email.value().to_string(),
+            username: user.username,
+            full_name: user.full_name,
+            is_verified: user.is_verified,
+            created_at: user.created_at,
+        }
+    }
 }

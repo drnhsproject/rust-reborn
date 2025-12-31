@@ -1,7 +1,7 @@
 use crate::application::dto::{LoginRequest, RegisterRequest};
 use crate::AuthState;
 use axum::{extract::State, http::HeaderMap, response::IntoResponse, Json};
-use rust_reborn_contracts::{common::response::created, validation::validate, AppError, Result};
+use rust_reborn_contracts::{common::response::created_with_message, validation::validate, AppError, Result};
 
 pub async fn register(
     State(state): State<AuthState>,
@@ -13,7 +13,10 @@ pub async fn register(
     // Call use case
     let response = state.auth_service.register(payload).await?;
 
-    Ok(created(response))
+   Ok(created_with_message(
+        response,
+        "Your account registered successfully",
+    ))
 }
 
 pub async fn login(
