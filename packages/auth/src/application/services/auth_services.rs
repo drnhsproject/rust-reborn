@@ -1,3 +1,4 @@
+use crate::RegisterResponse;
 use crate::application::dto::{
     AuthResponse, LoginRequest, RegisterRequest, TokenResponse, UserResponse,
 };
@@ -29,7 +30,7 @@ impl<R: UserRepository> AuthService<R> {
         }
     }
 
-    pub async fn register(&self, request: RegisterRequest) -> Result<AuthResponse> {
+    pub async fn register(&self, request: RegisterRequest) -> Result<RegisterResponse> {
         self.check_email_availability(&request.email).await?;
         self.check_username_availability(&request.username).await?;
 
@@ -52,16 +53,8 @@ impl<R: UserRepository> AuthService<R> {
 
         self.user_repository.save(user.clone()).await?;
 
-        let token = self.jwt_service.generate_token(&user)?;
-
-        Ok(AuthResponse {
-            user: user.into(),
-            token: TokenResponse {
-                access_token: token,
-                token_type: "Bearer".to_string(),
-                expires_in: 86400,
-                refresh_token: None,
-            },
+        Ok(RegisterResponse {
+            user: user.into()
         })
     }
 
