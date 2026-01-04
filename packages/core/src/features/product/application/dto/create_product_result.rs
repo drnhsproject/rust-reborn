@@ -1,8 +1,9 @@
 use crate::features::product::domain::Product;
 use serde::Serialize;
+use utoipa::ToSchema;
 use uuid::Uuid;
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct CreateProductResult {
     pub id: Uuid,
     pub name: String,

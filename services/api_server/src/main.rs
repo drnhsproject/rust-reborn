@@ -1,6 +1,7 @@
 pub mod config;
 pub mod fw;
 pub mod infrastructure;
+pub mod presentation;
 pub mod routes;
 
 #[tokio::main]
