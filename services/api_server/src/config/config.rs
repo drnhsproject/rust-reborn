@@ -1,4 +1,5 @@
 use config::{Config, ConfigError, Environment, File};
+use rust_reborn_auth::infrastructure::jwt::JwtConfig;
 use serde::Deserialize;
 use std::env;
 
@@ -25,13 +26,6 @@ pub struct DatabaseConfig {
 }
 
 #[derive(Debug, Deserialize, Clone)]
-pub struct JwtConfig {
-    pub secret: String,
-    pub expiration_hours: i64,
-    pub refresh_expiration_days: i64,
-}
-
-#[derive(Debug, Deserialize, Clone)]
 pub struct MediaConfig {
     pub upload_dir: String,
     pub max_file_size: usize,
@@ -52,7 +46,7 @@ impl AppConfig {
             .add_source(Environment::with_prefix("APP").separator("_"))
             .build()?;
 
-         // Deserialize with variable substitution
+        // Deserialize with variable substitution
         let mut app_config: AppConfig = config.try_deserialize()?;
 
         // Manual environment variable substitution for ${VAR} syntax
@@ -64,14 +58,14 @@ impl AppConfig {
         Ok(app_config)
     }
 
-     /// Substitute ${VAR} or ${VAR:-default} in config values
+    /// Substitute ${VAR} or ${VAR:-default} in config values
     fn substitute_env_vars(mut config: AppConfig) -> Result<Self, ConfigError> {
         // Database URL
         config.database.url = Self::expand_env(&config.database.url)?;
-        
+
         // JWT Secret
         config.jwt.secret = Self::expand_env(&config.jwt.secret)?;
-        
+
         // Media upload dir
         config.media.upload_dir = Self::expand_env(&config.media.upload_dir)?;
 
@@ -136,13 +130,13 @@ impl AppConfig {
         // Check if still contains placeholder
         if self.database.url.contains("${") {
             return Err(ConfigError::Message(
-                "DATABASE_URL environment variable is required".into()
+                "DATABASE_URL environment variable is required".into(),
             ));
         }
 
         if self.jwt.secret.contains("${") {
             return Err(ConfigError::Message(
-                "JWT_SECRET environment variable is required".into()
+                "JWT_SECRET environment variable is required".into(),
             ));
         }
 
@@ -150,7 +144,7 @@ impl AppConfig {
         if self.server.environment == "production" {
             if self.jwt.secret.len() < 32 {
                 return Err(ConfigError::Message(
-                    "JWT secret must be at least 32 characters in production".into()
+                    "JWT secret must be at least 32 characters in production".into(),
                 ));
             }
 
@@ -170,4 +164,3 @@ impl AppConfig {
         self.server.environment == "development"
     }
 }
-

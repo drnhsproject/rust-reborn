@@ -1,4 +1,6 @@
-pub mod handlers;
-pub mod product;
+pub mod features;
+pub mod shared;
 
-pub use handlers::create_product_routes;
+pub use features::product::domain::ProductRepository;
+pub use features::product::infrastructure::product_repository_impl::PostgresProductRepository;
+pub use features::product::presentation::product_routes::create_product_routes;

@@ -1,6 +1,6 @@
 use crate::domain::entities::User;
 use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation};
-use rust_reborn_contracts::{config::JwtConfig, AppError, Result};
+use rust_reborn_contracts::{AppError, Result};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -11,6 +11,13 @@ pub struct Claims {
     pub username: String,
     pub exp: i64,
     pub iat: i64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct JwtConfig {
+    pub secret: String,
+    pub expiration_hours: i64,
+    pub refresh_expiration_days: i64,
 }
 
 pub struct JwtService {

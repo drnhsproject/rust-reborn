@@ -17,7 +17,7 @@ A modern, scalable web framework built with Rust, implementing Domain-Driven Des
 
 ```
 rust-reborn/
-├── packages/              # Domain packages
+├── packages/             # Domain packages
 │   ├── core/             # Core utilities
 │   ├── auth/             # Authentication domain
 │   └── media/            # Media management (future)
@@ -69,6 +69,7 @@ cp .env.example .env
 ### 4. Run Migrations
 
 install sqlx-cli in your terminal:
+
 ```bash
 cargo install sqlx-cli
 sqlx migrate run
@@ -83,11 +84,13 @@ cargo run
 The server will start at `http://localhost:8000`
 
 if you want using watcher, you can install:
+
 ```bash
 cargo install cargo-watch
 ```
 
 and run using:
+
 ```bash
 cargo watch -x "run"
 ```

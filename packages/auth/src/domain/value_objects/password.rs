@@ -1,3 +1,4 @@
+use crate::domain::validate_password_strength;
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone)]
@@ -7,7 +8,7 @@ pub struct Password {
 
 impl Password {
     pub fn new(value: String) -> Result<Self, validator::ValidationError> {
-        rust_reborn_contracts::validation::custom::validate_password_strength(&value)?;
+        validate_password_strength(&value)?;
         Ok(Self { value })
     }
 

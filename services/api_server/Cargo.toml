@@ -34,3 +34,7 @@ tracing-subscriber = { workspace = true }
 
 # Error handling
 anyhow = { workspace = true }
+
+# Config
+config = { workspace = true }
+dotenvy = { workspace = true }
