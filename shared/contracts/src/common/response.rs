@@ -47,6 +47,16 @@ pub fn created_with_message<T: Serialize>(
     )
 }
 
+pub fn success_with_message<T: Serialize>(
+    data: T,
+    msg: impl Into<String>,
+) -> impl IntoResponse {
+    (
+        StatusCode::OK,
+        Json(ApiResponse::ok(data).with_message(msg)),
+    )
+}
+
 /// Return 204 NO CONTENT
 pub fn no_content() -> impl IntoResponse {
     StatusCode::NO_CONTENT

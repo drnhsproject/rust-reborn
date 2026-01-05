@@ -1,7 +1,12 @@
 use crate::application::dto::{LoginRequest, RegisterRequest};
 use crate::AuthState;
 use axum::{extract::State, http::HeaderMap, response::IntoResponse, Json};
-use rust_reborn_contracts::{common::response::created_with_message, AppError, Result};
+use rust_reborn_contracts::{
+    common::response::created_with_message, 
+    common::success_with_message, 
+    AppError, 
+    Result
+};
 use validator::Validate;
 
 pub async fn register(
@@ -16,7 +21,7 @@ pub async fn register(
 
     Ok(created_with_message(
         response,
-        "Your account registered successfully",
+        "your account registered successfully",
     ))
 }
 
@@ -40,10 +45,10 @@ pub async fn get_current_user(
     let auth_header = headers
         .get("Authorization")
         .and_then(|value| value.to_str().ok())
-        .ok_or_else(|| AppError::unauthorized("Missing Authorization header"))?;
+        .ok_or_else(|| AppError::unauthorized("missing Authorization header"))?;
 
     if !auth_header.starts_with("Bearer ") {
-        return Err(AppError::unauthorized("Invalid Authorization header"));
+        return Err(AppError::unauthorized("invalid Authorization header"));
     }
 
     let token = &auth_header[7..];
@@ -51,7 +56,10 @@ pub async fn get_current_user(
 
     let user = state.auth_service.get_user_by_id(user_id).await?;
 
-    Ok(Json(user))
+    Ok(success_with_message(
+        user,
+        "current user fetched successfully",
+    ))
 }
 
 pub async fn logout() -> Result<impl IntoResponse> {
@@ -59,6 +67,6 @@ pub async fn logout() -> Result<impl IntoResponse> {
     // by removing the token from storage.
     // For server-side logout, you'd need to implement token blacklisting.
     Ok(Json(serde_json::json!({
-        "message": "Logged out successfully"
+        "message": "logged out successfully"
     })))
 }
