@@ -102,7 +102,7 @@ impl<R: UserRepository> AuthService<R> {
             .user_repository
             .find_by_id(user_id)
             .await?
-            .ok_or_else(|| AppError::not_found("User not found"))?;
+            .ok_or_else(|| AppError::not_found("user not found"))?;
 
         Ok(user.into())
     }
