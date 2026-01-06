@@ -5,7 +5,7 @@ use rust_reborn_core::ProductRepository;
 use std::sync::Arc;
 
 pub fn auth_routes(state: AuthState) -> Router {
-    rust_reborn_auth::create_routes(state)
+    rust_reborn_auth::auth_routes_handler(state)
 }
 
 pub fn product_routes(repo: Arc<dyn ProductRepository>, auth_state: AuthState) -> Router {

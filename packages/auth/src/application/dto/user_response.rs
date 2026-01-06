@@ -2,8 +2,9 @@ use crate::domain::entities::user::User;
 use chrono::{DateTime, Utc};
 use serde::Serialize;
 use uuid::Uuid;
+use utoipa::ToSchema;
 
-#[derive(Debug, Serialize)]
+#[derive(Debug, Serialize, ToSchema)]
 pub struct UserResponse {
     pub id: Uuid,
     pub email: String,

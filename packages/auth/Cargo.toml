@@ -6,17 +6,13 @@ edition = "2021"
 [dependencies]
 rust-reborn-contracts = { path = "../../shared/contracts" }
 axum = { workspace = true }
-tower = { workspace = true }
-tokio = { workspace = true }
 async-trait = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 sqlx = { workspace = true }
 validator = { workspace = true }
-anyhow = { workspace = true }
-thiserror = { workspace = true }
 jsonwebtoken = { workspace = true }
 bcrypt = { workspace = true }
 uuid = { workspace = true }
 chrono = { workspace = true }
-tracing = { workspace = true }
+utoipa = { workspace = true, features = ["chrono"]}

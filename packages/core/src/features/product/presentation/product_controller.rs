@@ -15,7 +15,7 @@ use std::sync::Arc;
 
 #[utoipa::path(
     post,
-    path = "/api/products",
+    path = "/products",
     request_body = CreateProductRequest,
     responses(
         (status = 201, description = "Product created", body = CreateProductResult),

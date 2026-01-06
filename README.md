@@ -102,7 +102,7 @@ cargo watch -x "run"
 #### Register User
 
 ```bash
-POST /api/v1/auth/register
+POST /api/auth/register
 Content-Type: application/json
 
 {
@@ -118,18 +118,12 @@ Content-Type: application/json
 ```json
 {
   "success": true,
+  "message": "your account registered successfully",
   "data": {
-    "user": {
-      "id": "uuid",
-      "email": "user@example.com",
-      "username": "johndoe",
-      "is_verified": false
-    },
-    "token": {
-      "access_token": "jwt_token_here",
-      "token_type": "Bearer",
-      "expires_in": 86400
-    }
+    "id": "uuid",
+    "email": "user@example.com",
+    "username": "johndoe",
+    "is_verified": false
   }
 }
 ```
@@ -137,7 +131,7 @@ Content-Type: application/json
 #### Login
 
 ```bash
-POST /api/v1/auth/login
+POST /api/auth/login
 Content-Type: application/json
 
 {
@@ -145,18 +139,36 @@ Content-Type: application/json
   "password": "SecurePass123!"
 }
 ```
+**Response:**
+
+```json
+{
+  "user": {
+    "id": "uuid",
+    "email": "user@example.com",
+    "username": "johndoe",
+    "is_verified": false
+  },
+  "token": {
+    "access_token": "token",
+    "token_type": "Bearer",
+    "expires_in": 123,
+    "refresh_token": null
+  }
+}
+```
 
 #### Get Current User
 
 ```bash
-GET /api/v1/auth/me
+GET /api/auth/me
 Authorization: Bearer <token>
 ```
 
 #### Logout
 
 ```bash
-POST /api/v1/auth/logout
+POST /api/auth/logout
 Authorization: Bearer <token>
 ```
 

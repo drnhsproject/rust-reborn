@@ -1,4 +1,4 @@
-use crate::application::dto::{LoginRequest, RegisterRequest};
+use crate::application::dto::{LoginRequest, RegisterRequest, AuthResponse};
 use crate::AuthState;
 use axum::{extract::State, http::HeaderMap, response::IntoResponse, Json};
 use rust_reborn_contracts::{
@@ -25,14 +25,22 @@ pub async fn register(
     ))
 }
 
+#[utoipa::path(
+    post,
+    path = "/login",
+    request_body = LoginRequest,
+    responses(
+        (status = 200, description = "login success", body = AuthResponse),
+        (status = 400, description = "Validation error")
+    ),
+    tag = "Authentication"
+)]
 pub async fn login(
     State(state): State<AuthState>,
     Json(payload): Json<LoginRequest>,
 ) -> Result<impl IntoResponse> {
-    // Validate input
     payload.validate()?;
 
-    // Call use case
     let response = state.auth_service.login(payload).await?;
 
     Ok(Json(response))

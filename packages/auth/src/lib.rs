@@ -5,7 +5,8 @@ pub mod presentation;
 
 pub use application::dto::*;
 pub use domain::entities::User;
-pub use presentation::create_routes;
+pub use presentation::auth_routes_handler;
+pub use presentation::{AuthApiDoc};
 pub use presentation::middleware::{auth_middleware, optional_auth_middleware};
 
 use application::services::AuthService;
