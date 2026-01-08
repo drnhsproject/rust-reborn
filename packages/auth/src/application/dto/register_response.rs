@@ -1,6 +1,6 @@
+use crate::User;
 use chrono::{DateTime, Utc};
 use serde::Serialize;
-use crate::User;
 
 #[derive(Debug, Serialize)]
 pub struct RegisterResponse {

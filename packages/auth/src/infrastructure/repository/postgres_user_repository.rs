@@ -1,4 +1,8 @@
-use crate::domain::{entity::User, repository::UserRepository, value_objects::{Email, HashedPassword}};
+use crate::domain::{
+    entity::User,
+    repository::UserRepository,
+    value_objects::{Email, HashedPassword},
+};
 use async_trait::async_trait;
 use rust_reborn_contracts::Result;
 use sqlx::{query, PgPool};
@@ -206,7 +210,7 @@ impl UserRepository for PostgresUserRepository {
         assert!(user.id.is_none(), "User already persisted");
 
         let id = sqlx::query!(
-        r#"INSERT INTO users (
+            r#"INSERT INTO users (
                 code,
                 email,
                 username,
@@ -228,9 +232,9 @@ impl UserRepository for PostgresUserRepository {
             user.created_at,
             user.updated_at,
         )
-            .fetch_one(&self.pool)
-            .await?
-            .id;
+        .fetch_one(&self.pool)
+        .await?
+        .id;
 
         user.id = Some(id);
         Ok(())

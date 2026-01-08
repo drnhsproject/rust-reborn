@@ -1,5 +1,5 @@
-use uuid::Uuid;
 use crate::common::CodeGenerator;
+use uuid::Uuid;
 
 pub struct UuidV7CodeGenerator;
 

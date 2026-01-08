@@ -1,5 +1,5 @@
-use rust_reborn_core::features::product::presentation::ProductApiDoc;
 use rust_reborn_auth::AuthApiDoc;
+use rust_reborn_core::features::product::presentation::ProductApiDoc;
 use utoipa::openapi::security::{HttpAuthScheme, HttpBuilder, SecurityScheme};
 use utoipa::OpenApi;
 

@@ -1,4 +1,6 @@
-use std::sync::Arc;
+use crate::application::auth_context::AuthContext;
+use crate::infrastructure::jwt::JwtService;
+use crate::presentation::request_auth_context::RequestAuthContext;
 use axum::{
     extract::{Request, State},
     http::header,
@@ -6,9 +8,7 @@ use axum::{
     response::Response,
 };
 use rust_reborn_contracts::AppError;
-use crate::application::auth_context::AuthContext;
-use crate::infrastructure::jwt::JwtService;
-use crate::presentation::request_auth_context::RequestAuthContext;
+use std::sync::Arc;
 
 pub async fn auth_middleware(
     State(jwt): State<Arc<JwtService>>,
@@ -21,15 +21,15 @@ pub async fn auth_middleware(
         .and_then(|value| value.to_str().ok())
         .ok_or_else(|| AppError::unauthorized("missing Authorization header"))?;
 
-    let token = auth_header.strip_prefix("Bearer ")
+    let token = auth_header
+        .strip_prefix("Bearer ")
         .ok_or_else(|| AppError::unauthorized("invalid Authorization header"))?;
 
     let user_id = jwt
         .verify_token(token)
         .map_err(|_| AppError::unauthorized("invalid or expired token"))?;
 
-    let ctx: Arc<dyn AuthContext> =
-        Arc::new(RequestAuthContext::authenticated(user_id));
+    let ctx: Arc<dyn AuthContext> = Arc::new(RequestAuthContext::authenticated(user_id));
 
     request.extensions_mut().insert(ctx);
 

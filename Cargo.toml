@@ -15,7 +15,7 @@ license = "MIT"
 
 [workspace.dependencies]
 axum = { version = "0.8.8", features = ["macros", "multipart"] }
-tokio = { version = "1.35", features = ["full"] }
+tokio = { version = "1.49.0", features = ["full"] }
 tower = { version = "0.5.2", features = ["util"] }
 tower-http = { version = "0.6.8", features = ["trace", "cors", "fs"] }
 

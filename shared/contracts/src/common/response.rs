@@ -1,4 +1,8 @@
-use axum::{http::StatusCode, response::{IntoResponse, Response}, Json};
+use axum::{
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    Json,
+};
 use serde::Serialize;
 
 #[derive(Serialize)]
@@ -10,10 +14,10 @@ pub struct ApiResponse<T: Serialize> {
 
 impl<T: Serialize> ApiResponse<T> {
     pub fn ok(data: T) -> Self {
-        Self { 
+        Self {
             success: true,
             message: None,
-            data 
+            data,
         }
     }
 
@@ -37,20 +41,14 @@ pub fn created<T: Serialize>(data: T) -> impl IntoResponse {
     (StatusCode::CREATED, Json(ApiResponse::ok(data)))
 }
 
-pub fn created_with_message<T: Serialize>(
-    data: T,
-    msg: impl Into<String>,
-) -> impl IntoResponse {
+pub fn created_with_message<T: Serialize>(data: T, msg: impl Into<String>) -> impl IntoResponse {
     (
         StatusCode::CREATED,
         Json(ApiResponse::ok(data).with_message(msg)),
     )
 }
 
-pub fn success_with_message<T: Serialize>(
-    data: T,
-    msg: impl Into<String>,
-) -> impl IntoResponse {
+pub fn success_with_message<T: Serialize>(data: T, msg: impl Into<String>) -> impl IntoResponse {
     (
         StatusCode::OK,
         Json(ApiResponse::ok(data).with_message(msg)),

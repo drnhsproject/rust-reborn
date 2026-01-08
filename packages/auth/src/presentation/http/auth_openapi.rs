@@ -1,4 +1,4 @@
-use crate::application::dto::{LoginRequest, AuthResponse};
+use crate::application::dto::{AuthResponse, LoginRequest};
 use utoipa::OpenApi;
 
 #[derive(OpenApi)]

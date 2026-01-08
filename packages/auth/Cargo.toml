@@ -13,6 +13,6 @@ sqlx = { workspace = true }
 validator = { workspace = true }
 jsonwebtoken = { workspace = true }
 bcrypt = { workspace = true }
-uuid = { workspace = true }
 chrono = { workspace = true }
 utoipa = { workspace = true, features = ["chrono"]}
+tokio = {workspace = true}

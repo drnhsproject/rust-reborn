@@ -6,22 +6,19 @@ pub mod presentation;
 pub use application::dto::*;
 pub use domain::entity::User;
 pub use presentation::auth_routes_handler;
-pub use presentation::{AuthApiDoc};
 pub use presentation::middleware::{auth_middleware, optional_auth_middleware};
+pub use presentation::AuthApiDoc;
 
+use crate::application::get_user_detail::GetUserDetailUseCase;
+use crate::application::verify_token::VerifyTokenUseCase;
+use crate::application::{login_user::LoginUserUseCase, register_user::RegisterUserUseCase};
 use infrastructure::jwt::JwtConfig;
 use infrastructure::jwt::JwtService;
 use infrastructure::password::PasswordService;
 use infrastructure::repository::PostgresUserRepository;
+use rust_reborn_contracts::common::{CodeGenerator, UuidV7CodeGenerator};
 use sqlx::PgPool;
 use std::sync::Arc;
-use rust_reborn_contracts::common::{CodeGenerator, UuidV7CodeGenerator};
-use crate::application::{
-    register_user::RegisterUserUseCase,
-    login_user::LoginUserUseCase
-};
-use crate::application::get_user_detail::GetUserDetailUseCase;
-use crate::application::verify_token::VerifyTokenUseCase;
 
 #[derive(Clone)]
 pub struct AuthState {
@@ -37,8 +34,7 @@ impl AuthState {
         let user_repo = Arc::new(PostgresUserRepository::new(pool));
         let password_service = Arc::new(PasswordService::new());
         let jwt_service = Arc::new(JwtService::new(jwt_config));
-        let code_generator: Arc<dyn CodeGenerator> =
-            Arc::new(UuidV7CodeGenerator);
+        let code_generator: Arc<dyn CodeGenerator> = Arc::new(UuidV7CodeGenerator);
 
         let register_user_use_case = Arc::new(RegisterUserUseCase::new(
             user_repo.clone(),
@@ -51,14 +47,10 @@ impl AuthState {
             jwt_service.clone(),
             password_service.clone(),
         ));
-        
-        let get_user_detail_use_case = Arc::new(GetUserDetailUseCase::new(
-            user_repo.clone(),
-        ));
-        
-        let verify_token_use_case = Arc::new(VerifyTokenUseCase::new(
-            jwt_service.clone(),
-        ));
+
+        let get_user_detail_use_case = Arc::new(GetUserDetailUseCase::new(user_repo.clone()));
+
+        let verify_token_use_case = Arc::new(VerifyTokenUseCase::new(jwt_service.clone()));
 
         Self {
             get_user_detail_use_case,

@@ -1,1 +1,1 @@
-pub mod auth_services;
+pub mod register_test;

@@ -1,8 +1,8 @@
-use std::sync::Arc;
 use crate::application::password_hasher::PasswordHasher;
-use crate::domain::{UserRepository, value_objects::Password};
-use rust_reborn_contracts::{AppError, Result};
 use crate::domain::value_objects::HashedPassword;
+use crate::domain::{value_objects::Password, UserRepository};
+use rust_reborn_contracts::{AppError, Result};
+use std::sync::Arc;
 
 pub struct ChangePasswordUseCase {
     user_repo: Arc<dyn UserRepository>,
@@ -10,13 +10,11 @@ pub struct ChangePasswordUseCase {
 }
 
 impl ChangePasswordUseCase {
-    pub async fn execute(
-        &self,
-        user_id: i64,
-        old: String,
-        new: String,
-    ) -> Result<()> {
-        let mut user = self.user_repo.find_by_id(user_id).await?
+    pub async fn execute(&self, user_id: i64, old: String, new: String) -> Result<()> {
+        let mut user = self
+            .user_repo
+            .find_by_id(user_id)
+            .await?
             .ok_or_else(|| AppError::not_found("user not found"))?;
 
         if !self.password_hasher.verify(&old, user.password.value())? {

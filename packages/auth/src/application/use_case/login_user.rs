@@ -1,10 +1,10 @@
-use std::sync::Arc;
-use rust_reborn_contracts::{AppError, Result};
 use crate::application::password_hasher::PasswordHasher;
 use crate::domain::UserRepository;
 use crate::infrastructure::jwt::JwtService;
 use crate::infrastructure::password::PasswordService;
 use crate::{AuthResponse, LoginRequest, TokenResponse, User};
+use rust_reborn_contracts::{AppError, Result};
+use std::sync::Arc;
 
 pub struct LoginUserUseCase {
     user_repo: Arc<dyn UserRepository>,
@@ -35,7 +35,10 @@ impl LoginUserUseCase {
             return Err(AppError::forbidden("account is not active or verified"));
         }
 
-        if !self.password_service.verify(&req.password, user.password.value())? {
+        if !self
+            .password_service
+            .verify(&req.password, user.password.value())?
+        {
             return Err(AppError::unauthorized("invalid credentials"));
         }
 
@@ -56,7 +59,10 @@ impl LoginUserUseCase {
         })
     }
 
-    async fn find_user_by_username_or_email(&self, input: &str) -> rust_reborn_contracts::Result<Option<User>> {
+    async fn find_user_by_username_or_email(
+        &self,
+        input: &str,
+    ) -> rust_reborn_contracts::Result<Option<User>> {
         // Try email first
         if let Some(user) = self.user_repo.find_by_email(input).await? {
             return Ok(Some(user));

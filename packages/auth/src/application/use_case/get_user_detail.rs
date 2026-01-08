@@ -1,7 +1,7 @@
-use std::sync::Arc;
-use rust_reborn_contracts::AppError;
 use crate::domain::UserRepository;
 use crate::UserResponse;
+use rust_reborn_contracts::AppError;
+use std::sync::Arc;
 
 pub struct GetUserDetailUseCase {
     user_repo: Arc<dyn UserRepository>,

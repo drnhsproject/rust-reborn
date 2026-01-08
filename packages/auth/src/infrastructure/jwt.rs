@@ -38,10 +38,10 @@ impl JwtService {
     }
 
     pub fn generate_token(&self, user: &User) -> Result<String> {
-        let user_id = user.id.ok_or_else(|| {
-            AppError::internal("cannot generate token: user.id is None")
-        })?;
-        
+        let user_id = user
+            .id
+            .ok_or_else(|| AppError::internal("cannot generate token: user.id is None"))?;
+
         let now = chrono::Utc::now();
         let exp = now + chrono::Duration::hours(self.config.expiration_hours);
 
@@ -61,7 +61,10 @@ impl JwtService {
         let token_data = decode::<Claims>(token, &self.decoding_key, &Validation::default())
             .map_err(|e| AppError::unauthorized(format!("invalid token: {}", e)))?;
 
-        let user_id = token_data.claims.sub.parse::<i64>()
+        let user_id = token_data
+            .claims
+            .sub
+            .parse::<i64>()
             .map_err(|e| AppError::internal(format!("invalid user ID in token: {}", e)))?;
 
         Ok(user_id)

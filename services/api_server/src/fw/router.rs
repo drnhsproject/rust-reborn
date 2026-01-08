@@ -1,17 +1,13 @@
 use crate::presentation;
 use crate::routes;
 use axum::Router;
+use rust_reborn_auth::infrastructure::jwt::{JwtConfig, JwtService};
 use rust_reborn_auth::AuthState;
 use rust_reborn_core::{PostgresProductRepository, ProductRepository};
 use std::sync::Arc;
 use utoipa_swagger_ui::SwaggerUi;
-use rust_reborn_auth::infrastructure::jwt::{JwtConfig, JwtService};
 
-pub fn build_router(
-    pool: sqlx::PgPool,
-    auth_state: AuthState,
-    jwt_config: JwtConfig,
-) -> Router {
+pub fn build_router(pool: sqlx::PgPool, auth_state: AuthState, jwt_config: JwtConfig) -> Router {
     let product_repo =
         Arc::new(PostgresProductRepository::new(pool.clone())) as Arc<dyn ProductRepository>;
     let jwt_service = Arc::new(JwtService::new(jwt_config));

@@ -1,4 +1,8 @@
-use axum::{http::StatusCode, response::{IntoResponse, Response}, Json};
+use axum::{
+    http::StatusCode,
+    response::{IntoResponse, Response},
+    Json,
+};
 use serde::{Deserialize, Serialize};
 
 pub type Result<T> = std::result::Result<T, AppError>;
@@ -16,12 +20,24 @@ pub enum AppError {
 }
 
 impl AppError {
-    pub fn internal(msg: impl Into<String>) -> Self { Self::Internal(msg.into()) }
-    pub fn not_found(msg: impl Into<String>) -> Self { Self::NotFound(msg.into()) }
-    pub fn bad_request(msg: impl Into<String>) -> Self { Self::BadRequest(msg.into()) }
-    pub fn unauthorized(msg: impl Into<String>) -> Self { Self::Unauthorized(msg.into()) }
-    pub fn forbidden(msg: impl Into<String>) -> Self { Self::Forbidden(msg.into()) }
-    pub fn conflict(msg: impl Into<String>) -> Self { Self::Conflict(msg.into()) }
+    pub fn internal(msg: impl Into<String>) -> Self {
+        Self::Internal(msg.into())
+    }
+    pub fn not_found(msg: impl Into<String>) -> Self {
+        Self::NotFound(msg.into())
+    }
+    pub fn bad_request(msg: impl Into<String>) -> Self {
+        Self::BadRequest(msg.into())
+    }
+    pub fn unauthorized(msg: impl Into<String>) -> Self {
+        Self::Unauthorized(msg.into())
+    }
+    pub fn forbidden(msg: impl Into<String>) -> Self {
+        Self::Forbidden(msg.into())
+    }
+    pub fn conflict(msg: impl Into<String>) -> Self {
+        Self::Conflict(msg.into())
+    }
 }
 
 #[derive(Serialize, Deserialize)]
@@ -39,11 +55,20 @@ impl IntoResponse for AppError {
             Self::Unauthorized(msg) => (StatusCode::UNAUTHORIZED, "UNAUTHORIZED", msg),
             Self::Forbidden(msg) => (StatusCode::FORBIDDEN, "FORBIDDEN", msg),
             Self::Conflict(msg) => (StatusCode::CONFLICT, "CONFLICT", msg),
-            Self::ValidationError(e) => (StatusCode::BAD_REQUEST, "VALIDATION_ERROR", e.to_string()),
+            Self::ValidationError(e) => {
+                (StatusCode::BAD_REQUEST, "VALIDATION_ERROR", e.to_string())
+            }
             Self::DatabaseError(msg) => (StatusCode::INTERNAL_SERVER_ERROR, "DATABASE_ERROR", msg),
         };
 
-        (status, Json(ErrorResponse { error: error_type.to_string(), message })).into_response()
+        (
+            status,
+            Json(ErrorResponse {
+                error: error_type.to_string(),
+                message,
+            }),
+        )
+            .into_response()
     }
 }
 

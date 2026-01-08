@@ -1,11 +1,8 @@
-use axum::Router;
 use crate::fw::{
-    auth::build_auth_state,
-    auth::build_jwt_config,
-    db::build_db_pool, 
-    load_config::load_config, 
+    auth::build_auth_state, auth::build_jwt_config, db::build_db_pool, load_config::load_config,
     router::build_router,
 };
+use axum::Router;
 
 pub struct App {
     pub router: Router,

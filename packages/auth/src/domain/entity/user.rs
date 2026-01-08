@@ -1,6 +1,5 @@
 use crate::domain::value_objects::{Email, HashedPassword};
 use chrono::{DateTime, Utc};
-use rust_reborn_contracts::common::{CodeGenerator, UuidV7CodeGenerator};
 
 #[derive(Debug, Clone)]
 pub struct User {

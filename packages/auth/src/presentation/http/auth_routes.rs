@@ -1,9 +1,9 @@
+use crate::presentation::http::handlers::{get_current_user, login, logout, register};
 use crate::AuthState;
 use axum::{
     routing::{get, post},
     Router,
 };
-use crate::presentation::http::handlers::{get_current_user, login, logout, register};
 
 pub fn auth_routes_handler(state: AuthState) -> Router {
     Router::new()

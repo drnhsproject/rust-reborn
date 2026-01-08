@@ -1,29 +1,28 @@
 use crate::application::dto::{RegisterRequest, RegisterResponse};
+use crate::application::password_hasher::PasswordHasher;
 use crate::domain::entity::User;
 use crate::domain::repository::user_repository::UserRepository;
 use crate::domain::value_objects::{Email, HashedPassword, Password};
+use rust_reborn_contracts::common::CodeGenerator;
 use rust_reborn_contracts::{AppError, Result};
 use std::sync::Arc;
-use rust_reborn_contracts::common::CodeGenerator;
-use crate::application::password_hasher::PasswordHasher;
-use crate::infrastructure::password::PasswordService;
 
 pub struct RegisterUserUseCase {
     user_repo: Arc<dyn UserRepository>,
-    password_service: Arc<PasswordService>,
+    password_hasher: Arc<dyn PasswordHasher>,
     code_generator: Arc<dyn CodeGenerator>,
 }
 
 impl RegisterUserUseCase {
     pub fn new(
         user_repo: Arc<dyn UserRepository>,
-        password_service: Arc<PasswordService>,
+        password_hasher: Arc<dyn PasswordHasher>,
         code_generator: Arc<dyn CodeGenerator>,
     ) -> Self {
         Self {
             user_repo,
-            password_service,
-            code_generator
+            password_hasher,
+            code_generator,
         }
     }
 
@@ -32,18 +31,22 @@ impl RegisterUserUseCase {
             return Err(AppError::conflict("email already registered"));
         }
 
-        if self.user_repo.find_by_username(&req.username).await?.is_some() {
+        if self
+            .user_repo
+            .find_by_username(&req.username)
+            .await?
+            .is_some()
+        {
             return Err(AppError::conflict("username already taken"));
         }
 
-        Password::new(req.password.clone())
-            .map_err(|e| AppError::bad_request(e.to_string()))?;
+        Password::new(req.password.clone()).map_err(|e| AppError::bad_request(e.to_string()))?;
 
         let email_obj = Email::new(req.email)
-            .map_err(|e| AppError::bad_request(format!("Invalid email: {}", e)))?;
+            .map_err(|e| AppError::bad_request(format!("invalid email: {}", e)))?;
 
         let code = self.code_generator.generate("usr");
-        let hashed = self.password_service.hash(&req.password)?;
+        let hashed = self.password_hasher.hash(&req.password)?;
         let hashed_password = HashedPassword::new(hashed);
 
         let mut user = User::new(

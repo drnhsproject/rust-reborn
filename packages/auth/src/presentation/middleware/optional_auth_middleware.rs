@@ -1,13 +1,13 @@
-use std::sync::Arc;
+use crate::application::auth_context::AuthContext;
+use crate::infrastructure::jwt::JwtService;
+use crate::presentation::request_auth_context::RequestAuthContext;
 use axum::{
     extract::{Request, State},
     http::header,
     middleware::Next,
     response::Response,
 };
-use crate::application::auth_context::AuthContext;
-use crate::infrastructure::jwt::JwtService;
-use crate::presentation::request_auth_context::RequestAuthContext;
+use std::sync::Arc;
 
 pub async fn optional_auth_middleware(
     State(jwt): State<Arc<JwtService>>,
@@ -28,4 +28,3 @@ pub async fn optional_auth_middleware(
 
     next.run(request).await
 }
-

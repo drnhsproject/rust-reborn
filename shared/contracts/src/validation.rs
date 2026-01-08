@@ -16,7 +16,7 @@ pub mod custom {
         let has_lower = password.chars().any(|c| c.is_lowercase());
         let has_digit = password.chars().any(|c| c.is_numeric());
         let has_special = password.chars().any(|c| !c.is_alphanumeric());
-        
+
         if !(has_upper && has_lower && has_digit && has_special) {
             return Err(ValidationError::new("password_too_weak"));
         }

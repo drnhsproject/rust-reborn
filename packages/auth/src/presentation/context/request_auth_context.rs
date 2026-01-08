@@ -13,9 +13,7 @@ impl RequestAuthContext {
     }
 
     pub fn anonymous() -> Self {
-        Self {
-            user_id: None,
-        }
+        Self { user_id: None }
     }
 }
 
