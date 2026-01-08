@@ -140,9 +140,9 @@ mkdir -p config migrations docker
 
 # Create package subdirectories for auth
 mkdir -p packages/auth/src/{domain,application,infrastructure,presentation}
-mkdir -p packages/auth/src/domain/{entities,repositories,value_objects}
+mkdir -p packages/auth/src/domain/{entity,repository,value_objects}
 mkdir -p packages/auth/src/application/{dto,services}
-mkdir -p packages/auth/src/infrastructure/repositories
+mkdir -p packages/auth/src/infrastructure/repository
 mkdir -p packages/auth/src/presentation/{http,middleware}
 
 # Create core subdirectories

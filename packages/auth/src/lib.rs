@@ -4,7 +4,7 @@ pub mod infrastructure;
 pub mod presentation;
 
 pub use application::dto::*;
-pub use domain::entities::User;
+pub use domain::entity::User;
 pub use presentation::auth_routes_handler;
 pub use presentation::{AuthApiDoc};
 pub use presentation::middleware::{auth_middleware, optional_auth_middleware};
@@ -12,7 +12,7 @@ pub use presentation::middleware::{auth_middleware, optional_auth_middleware};
 use infrastructure::jwt::JwtConfig;
 use infrastructure::jwt::JwtService;
 use infrastructure::password::PasswordService;
-use infrastructure::repositories::PostgresUserRepository;
+use infrastructure::repository::PostgresUserRepository;
 use sqlx::PgPool;
 use std::sync::Arc;
 use rust_reborn_contracts::common::{CodeGenerator, UuidV7CodeGenerator};

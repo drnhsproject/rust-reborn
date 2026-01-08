@@ -1,4 +1,4 @@
-use crate::domain::repositories::user_repository::UserRepository;
+use crate::domain::repository::user_repository::UserRepository;
 use std::sync::Arc;
 
 pub struct AuthService<R: UserRepository> {

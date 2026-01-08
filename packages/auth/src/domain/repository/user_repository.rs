@@ -1,4 +1,4 @@
-use crate::domain::entities::User;
+use crate::domain::entity::User;
 use async_trait::async_trait;
 use rust_reborn_contracts::Result;
 

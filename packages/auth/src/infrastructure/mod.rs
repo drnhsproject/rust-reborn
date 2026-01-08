@@ -1,4 +1,4 @@
 pub mod jwt;
 pub mod password;
-pub mod repositories;
-pub use repositories::PostgresUserRepository;
+pub mod repository;
+pub use repository::PostgresUserRepository;

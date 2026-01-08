@@ -1,6 +1,6 @@
 use crate::application::dto::{RegisterRequest, RegisterResponse};
-use crate::domain::entities::User;
-use crate::domain::repositories::user_repository::UserRepository;
+use crate::domain::entity::User;
+use crate::domain::repository::user_repository::UserRepository;
 use crate::domain::value_objects::{Email, HashedPassword, Password};
 use rust_reborn_contracts::{AppError, Result};
 use std::sync::Arc;

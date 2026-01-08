@@ -1,4 +1,4 @@
-use crate::domain::entities::User;
+use crate::domain::entity::User;
 use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation};
 use rust_reborn_contracts::{AppError, Result};
 use serde::{Deserialize, Serialize};

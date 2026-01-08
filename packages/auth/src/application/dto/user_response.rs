@@ -1,4 +1,4 @@
-use crate::domain::entities::user::User;
+use crate::domain::entity::user::User;
 use chrono::{DateTime, Utc};
 use serde::Serialize;
 use utoipa::ToSchema;

@@ -1,4 +1,4 @@
-use crate::domain::{entities::User, repositories::UserRepository, value_objects::{Email, HashedPassword}};
+use crate::domain::{entity::User, repository::UserRepository, value_objects::{Email, HashedPassword}};
 use async_trait::async_trait;
 use rust_reborn_contracts::Result;
 use sqlx::{query, PgPool};
