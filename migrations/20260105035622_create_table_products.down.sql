@@ -7,4 +7,3 @@ DROP INDEX IF EXISTS idx_products_status_active;
 
 -- Drop table
 DROP TABLE IF EXISTS products;
-DROP EXTENSION IF EXISTS "uuid-ossp";

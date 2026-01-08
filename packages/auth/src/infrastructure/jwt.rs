@@ -2,7 +2,6 @@ use crate::domain::entities::User;
 use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation};
 use rust_reborn_contracts::{AppError, Result};
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
@@ -39,11 +38,15 @@ impl JwtService {
     }
 
     pub fn generate_token(&self, user: &User) -> Result<String> {
+        let user_id = user.id.ok_or_else(|| {
+            AppError::internal("cannot generate token: user.id is None")
+        })?;
+        
         let now = chrono::Utc::now();
         let exp = now + chrono::Duration::hours(self.config.expiration_hours);
 
         let claims = Claims {
-            sub: user.id.to_string(),
+            sub: user_id.to_string(),
             email: user.email.value().to_string(),
             username: user.username.clone(),
             exp: exp.timestamp(),
@@ -51,15 +54,15 @@ impl JwtService {
         };
 
         encode(&Header::default(), &claims, &self.encoding_key)
-            .map_err(|e| AppError::internal(format!("Failed to generate token: {}", e)))
+            .map_err(|e| AppError::internal(format!("failed to generate token: {}", e)))
     }
 
-    pub fn verify_token(&self, token: &str) -> Result<Uuid> {
+    pub fn verify_token(&self, token: &str) -> Result<i64> {
         let token_data = decode::<Claims>(token, &self.decoding_key, &Validation::default())
-            .map_err(|e| AppError::unauthorized(format!("Invalid token: {}", e)))?;
+            .map_err(|e| AppError::unauthorized(format!("invalid token: {}", e)))?;
 
-        let user_id = Uuid::parse_str(&token_data.claims.sub)
-            .map_err(|e| AppError::internal(format!("Invalid user ID in token: {}", e)))?;
+        let user_id = token_data.claims.sub.parse::<i64>()
+            .map_err(|e| AppError::internal(format!("invalid user ID in token: {}", e)))?;
 
         Ok(user_id)
     }

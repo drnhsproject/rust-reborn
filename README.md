@@ -135,7 +135,7 @@ POST /api/auth/login
 Content-Type: application/json
 
 {
-  "login": "user@example.com",  # or username
+  "username": "user@example.com",  # or can using e-mail
   "password": "SecurePass123!"
 }
 ```

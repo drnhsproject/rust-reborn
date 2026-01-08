@@ -1,16 +1,15 @@
 -- Add up migration script here
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
 CREATE TABLE products (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    category_id UUID NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
+    code VARCHAR(100) NOT NULL UNIQUE,
+    category_id BIGSERIAL NOT NULL,
     name VARCHAR(255) NOT NULL,
     description TEXT,
     price NUMERIC(10, 2) NOT NULL,
     stock INT NOT NULL DEFAULT 0,
     status INT NOT NULL DEFAULT 1,
-    created_by UUID NULL,
-    updated_by UUID NULL,
+    created_by VARCHAR(255) NULL,
+    updated_by VARCHAR(255) NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     deleted_at TIMESTAMPTZ

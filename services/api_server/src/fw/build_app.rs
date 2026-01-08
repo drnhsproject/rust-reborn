@@ -1,7 +1,10 @@
 use axum::Router;
-
 use crate::fw::{
-    auth::build_auth_state, db::build_db_pool, load_config::load_config, router::build_router,
+    auth::build_auth_state,
+    auth::build_jwt_config,
+    db::build_db_pool, 
+    load_config::load_config, 
+    router::build_router,
 };
 
 pub struct App {
@@ -12,10 +15,9 @@ pub struct App {
 pub async fn build_app() -> anyhow::Result<App> {
     let config = load_config()?;
     let pool = build_db_pool(&config).await?;
+    let jwt_config = build_jwt_config(&config);
     let auth_state = build_auth_state(&pool, &config);
-
-    let router = build_router(pool.clone(), auth_state);
-
+    let router = build_router(pool.clone(), auth_state, jwt_config);
     let address = format!("{}:{}", config.server.host, config.server.port);
 
     Ok(App { router, address })

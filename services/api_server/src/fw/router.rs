@@ -5,11 +5,16 @@ use rust_reborn_auth::AuthState;
 use rust_reborn_core::{PostgresProductRepository, ProductRepository};
 use std::sync::Arc;
 use utoipa_swagger_ui::SwaggerUi;
+use rust_reborn_auth::infrastructure::jwt::{JwtConfig, JwtService};
 
-pub fn build_router(pool: sqlx::PgPool, auth_state: AuthState) -> Router {
+pub fn build_router(
+    pool: sqlx::PgPool,
+    auth_state: AuthState,
+    jwt_config: JwtConfig,
+) -> Router {
     let product_repo =
         Arc::new(PostgresProductRepository::new(pool.clone())) as Arc<dyn ProductRepository>;
-
+    let jwt_service = Arc::new(JwtService::new(jwt_config));
     let openapi = presentation::build_openapi();
 
     Router::new()
@@ -17,6 +22,6 @@ pub fn build_router(pool: sqlx::PgPool, auth_state: AuthState) -> Router {
         .nest("/api/auth", routes::auth_routes(auth_state.clone()))
         .nest(
             "/api/products",
-            routes::product_routes(product_repo, auth_state.clone()),
+            routes::product_routes(product_repo, jwt_service),
         )
 }

@@ -1,15 +1,19 @@
-use axum::Router;
-use rust_reborn_auth::AuthState;
-
-use rust_reborn_core::ProductRepository;
+use axum::{middleware, Router};
+use rust_reborn_auth::{auth_middleware, AuthState};
+use rust_reborn_core::{ProductRepository, product_routes_handler};
 use std::sync::Arc;
+use rust_reborn_auth::infrastructure::jwt::JwtService;
 
 pub fn auth_routes(state: AuthState) -> Router {
     rust_reborn_auth::auth_routes_handler(state)
 }
 
-pub fn product_routes(repo: Arc<dyn ProductRepository>, auth_state: AuthState) -> Router {
-    rust_reborn_core::create_product_routes(repo, auth_state)
+pub fn product_routes(
+    repo: Arc<dyn ProductRepository>,
+    jwt: Arc<JwtService>
+) -> Router {
+    product_routes_handler(repo)
+        .layer(middleware::from_fn_with_state(jwt, auth_middleware))
 }
 
 // Future: media routes

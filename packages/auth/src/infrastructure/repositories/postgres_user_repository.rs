@@ -2,7 +2,6 @@ use crate::domain::{entities::User, repositories::UserRepository, value_objects:
 use async_trait::async_trait;
 use rust_reborn_contracts::Result;
 use sqlx::{query, PgPool};
-use uuid::Uuid;
 
 #[derive(Clone)]
 pub struct PostgresUserRepository {
@@ -23,12 +22,23 @@ impl UserRepository for PostgresUserRepository {
             r#"
             SELECT
                 id,
+                code,
                 email,
                 username,
+                password,
                 full_name,
-                password_hash,
                 is_verified,
+                is_active,
+                activation_key,
+                reset_key,
+                reset_key_expires_at,
+                reset_date,
+                status,
+                created_by,
+                updated_by,
                 created_at,
+                updated_at,
+                deleted_at,
                 last_login_at
             FROM users
             WHERE email = $1
@@ -39,32 +49,50 @@ impl UserRepository for PostgresUserRepository {
         .await?;
 
         Ok(row.map(|r| User {
-            id: r.id,
+            id: Some(r.id),
+            code: r.code,
             email: Email::new(r.email).unwrap(),
             username: r.username,
+            password: HashedPassword::new(r.password),
             full_name: r.full_name,
-            password: HashedPassword::new(r.password_hash),
+            is_active: r.is_active,
             is_verified: r.is_verified,
+            activation_key: r.activation_key,
+            reset_key: r.reset_key,
+            reset_key_expires_at: r.reset_key_expires_at,
+            reset_date: r.reset_date,
+            status: r.status,
+            created_by: r.created_by,
+            updated_by: r.updated_by,
             created_at: r.created_at,
-            updated_at: r.created_at, 
-            is_active: true,
+            updated_at: r.created_at,
+            deleted_at: r.deleted_at,
             last_login_at: r.last_login_at,
         }))
     }
 
-    async fn find_by_id(&self, id: Uuid) -> Result<Option<User>> {
+    async fn find_by_id(&self, id: i64) -> Result<Option<User>> {
         let row = query!(
             r#"
             SELECT
                 id,
+                code,
                 email,
                 username,
+                password,
                 full_name,
-                password_hash,
                 is_verified,
+                is_active,
+                activation_key,
+                reset_key,
+                reset_key_expires_at,
+                reset_date,
+                status,
+                created_by,
+                updated_by,
                 created_at,
                 updated_at,
-                is_active,
+                deleted_at,
                 last_login_at
             FROM users
             WHERE id = $1
@@ -75,15 +103,24 @@ impl UserRepository for PostgresUserRepository {
         .await?;
 
         Ok(row.map(|r| User {
-            id: r.id,
+            id: Some(r.id),
+            code: r.code,
             email: Email::new(r.email).unwrap(),
             username: r.username,
+            password: HashedPassword::new(r.password),
             full_name: r.full_name,
-            password: HashedPassword::new(r.password_hash),
-            is_verified: r.is_verified,
-            created_at: r.created_at,
-            updated_at: r.updated_at,
             is_active: r.is_active,
+            is_verified: r.is_verified,
+            activation_key: r.activation_key,
+            reset_key: r.reset_key,
+            reset_key_expires_at: r.reset_key_expires_at,
+            reset_date: r.reset_date,
+            status: r.status,
+            created_by: r.created_by,
+            updated_by: r.updated_by,
+            created_at: r.created_at,
+            updated_at: r.created_at,
+            deleted_at: r.deleted_at,
             last_login_at: r.last_login_at,
         }))
     }
@@ -93,14 +130,23 @@ impl UserRepository for PostgresUserRepository {
             r#"
             SELECT
                 id,
+                code,
                 email,
                 username,
                 full_name,
-                password_hash,
+                password,
                 is_verified,
+                is_active,
+                activation_key,
+                reset_key,
+                reset_key_expires_at,
+                reset_date,
+                status,
+                created_by,
+                updated_by,
                 created_at,
                 updated_at,
-                is_active,
+                deleted_at,
                 last_login_at
             FROM users
             WHERE username = $1
@@ -111,15 +157,24 @@ impl UserRepository for PostgresUserRepository {
         .await?;
 
         Ok(row.map(|r| User {
-            id: r.id,
+            id: Some(r.id),
+            code: r.code,
             email: Email::new(r.email).unwrap(),
             username: r.username,
             full_name: r.full_name,
-            password: HashedPassword::new(r.password_hash),
+            password: HashedPassword::new(r.password),
+            is_active: r.is_active,
             is_verified: r.is_verified,
+            activation_key: r.activation_key,
+            reset_key: r.reset_key,
+            reset_key_expires_at: r.reset_key_expires_at,
+            reset_date: r.reset_date,
+            status: r.status,
+            created_by: r.created_by,
+            updated_by: r.updated_by,
             created_at: r.created_at,
             updated_at: r.updated_at,
-            is_active: r.is_active,
+            deleted_at: r.deleted_at,
             last_login_at: r.last_login_at,
         }))
     }
@@ -130,7 +185,7 @@ impl UserRepository for PostgresUserRepository {
             UPDATE users
             SET
                 full_name = $1,
-                password_hash = $2,
+                password = $2,
                 is_verified = $3,
                 last_login_at = $4
             WHERE id = $5
@@ -147,30 +202,37 @@ impl UserRepository for PostgresUserRepository {
         Ok(user.clone())
     }
 
-    async fn save(&self, user: User) -> Result<()> {
-        query!(
-            r#"
-            INSERT INTO users (
-                id,
+    async fn save(&self, user: &mut User) -> Result<()> {
+        assert!(user.id.is_none(), "User already persisted");
+
+        let id = sqlx::query!(
+        r#"INSERT INTO users (
+                code,
                 email,
                 username,
                 full_name,
-                password_hash,
+                password,
                 is_verified,
-                created_at
+                created_at,
+                updated_at
             )
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+            RETURNING id
             "#,
-            user.id,
-            user.email.value(),          // Email VO → &str
-            user.username,
+            &user.code,
+            user.email.value(),
+            &user.username,
             user.full_name,
-            user.password.value(),       // HashedPassword VO → &str
+            user.password.value(),
             user.is_verified,
             user.created_at,
+            user.updated_at,
         )
-        .execute(&self.pool)
-        .await?;
+            .fetch_one(&self.pool)
+            .await?
+            .id;
+
+        user.id = Some(id);
         Ok(())
     }
 }

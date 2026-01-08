@@ -1,12 +1,11 @@
 use crate::domain::entities::user::User;
 use chrono::{DateTime, Utc};
 use serde::Serialize;
-use uuid::Uuid;
 use utoipa::ToSchema;
 
 #[derive(Debug, Serialize, ToSchema)]
 pub struct UserResponse {
-    pub id: Uuid,
+    pub id: i64,
     pub email: String,
     pub username: String,
     pub full_name: Option<String>,
@@ -17,7 +16,7 @@ pub struct UserResponse {
 impl From<User> for UserResponse {
     fn from(user: User) -> Self {
         Self {
-            id: user.id,
+            id: user.id.unwrap(),
             email: user.email.value().to_string(),
             username: user.username,
             full_name: user.full_name,
