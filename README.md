@@ -47,17 +47,7 @@ cd rust-reborn
 
 ### 2. Setup Database
 
-Using Docker Compose (recommended):
-
-```bash
-docker-compose up -d postgres
-```
-
-Or install PostgreSQL locally and create database:
-
-```bash
-createdb rust_reborn
-```
+Using Docker Compose (recommended) Or install PostgreSQL locally and create database.
 
 ### 3. Configure Environment
 
@@ -72,6 +62,10 @@ install sqlx-cli in your terminal:
 
 ```bash
 cargo install sqlx-cli
+sqlx database create
+```
+
+```bash
 sqlx migrate run
 ```
 
@@ -82,18 +76,6 @@ cargo run
 ```
 
 The server will start at `http://localhost:8000`
-
-if you want using watcher, you can install:
-
-```bash
-cargo install cargo-watch
-```
-
-and run using:
-
-```bash
-cargo watch -x "run"
-```
 
 ## 📚 API Documentation
 
@@ -123,7 +105,7 @@ Content-Type: application/json
     "id": "uuid",
     "email": "user@example.com",
     "username": "johndoe",
-    "is_verified": false
+    "is_active": true
   }
 }
 ```
@@ -258,7 +240,7 @@ In `services/api_server/src/main.rs`:
 
 ```rust
 let app = Router::new()
-    .nest("/api/v1/my-feature", routes::my_feature_routes(state))
+    .nest("/api/my-feature", routes::my_feature_routes(state))
     // ... other routes
 ```
 
@@ -273,7 +255,7 @@ cargo build --release --bin api_server
 ### Docker Build
 
 ```bash
-docker build -f docker/api_server.Dockerfile -t rust-reborn-api .
+docker build -f docker/Dockerfile -t rust-reborn-api .
 ```
 
 ### Environment Variables

@@ -10,7 +10,7 @@ Panduan lengkap untuk testing product API endpoints dengan authentication.
 cargo run --bin api_server
 ```
 
-Server akan berjalan di `http://localhost:3000`
+Server akan berjalan di `http://localhost:8000`
 
 ## API Endpoints
 
@@ -19,7 +19,7 @@ Server akan berjalan di `http://localhost:3000`
 #### 1. Register User
 
 ```bash
-curl -X POST http://localhost:3000/api/auth/register \
+curl -X POST http://localhost:8000/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com",
@@ -42,7 +42,7 @@ curl -X POST http://localhost:3000/api/auth/register \
 #### 2. Login
 
 ```bash
-curl -X POST http://localhost:3000/api/auth/login \
+curl -X POST http://localhost:8000/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com",
@@ -70,7 +70,7 @@ curl -X POST http://localhost:3000/api/auth/login \
 #### 3. List Products (Public - Tidak Perlu Login)
 
 ```bash
-curl http://localhost:3000/api/products
+curl http://localhost:8000/api/products
 ```
 
 **Response:**
@@ -97,7 +97,7 @@ curl http://localhost:3000/api/products
 #### 4. Get Product by ID (Public - Tidak Perlu Login)
 
 ```bash
-curl http://localhost:3000/api/products/some-uuid
+curl http://localhost:8000/api/products/some-uuid
 ```
 
 **Response:**
@@ -117,7 +117,7 @@ curl http://localhost:3000/api/products/some-uuid
 **❌ Tanpa Token (akan error 401):**
 
 ```bash
-curl -X POST http://localhost:3000/api/products \
+curl -X POST http://localhost:8000/api/products \
   -H "Content-Type: application/json" \
   -d '{
     "name": "New Product",
@@ -141,7 +141,7 @@ curl -X POST http://localhost:3000/api/products \
 
 ```bash
 # Ganti YOUR_ACCESS_TOKEN dengan token dari login
-curl -X POST http://localhost:3000/api/products \
+curl -X POST http://localhost:8000/api/products \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -d '{
@@ -170,7 +170,7 @@ curl -X POST http://localhost:3000/api/products \
 ### Step 1: Register a User
 
 ```bash
-curl -X POST http://localhost:3000/api/auth/register \
+curl -X POST http://localhost:8000/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "email": "test@example.com",
@@ -182,7 +182,7 @@ curl -X POST http://localhost:3000/api/auth/register \
 ### Step 2: Login to Get Token
 
 ```bash
-curl -X POST http://localhost:3000/api/auth/login \
+curl -X POST http://localhost:8000/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "test@example.com",
@@ -195,7 +195,7 @@ Copy the `access_token` from response.
 ### Step 3: List Products (No Auth Needed)
 
 ```bash
-curl http://localhost:3000/api/products
+curl http://localhost:8000/api/products
 ```
 
 ### Step 4: Create Product (Auth Required)
@@ -204,7 +204,7 @@ curl http://localhost:3000/api/products
 # Replace TOKEN with your actual token
 TOKEN="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 
-curl -X POST http://localhost:3000/api/products \
+curl -X POST http://localhost:8000/api/products \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $TOKEN" \
   -d '{
@@ -217,7 +217,7 @@ curl -X POST http://localhost:3000/api/products \
 ### Step 5: List Products Again (Should See New Product)
 
 ```bash
-curl http://localhost:3000/api/products
+curl http://localhost:8000/api/products
 ```
 
 ---

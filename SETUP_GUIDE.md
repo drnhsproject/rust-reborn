@@ -193,7 +193,7 @@ Server akan jalan di `http://localhost:8000` dengan hot reload!
 ### 1. Register a New User
 
 ```bash
-curl -X POST http://localhost:8000/api/v1/auth/register \
+curl -X POST http://localhost:8000/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "email": "test@example.com",
@@ -206,7 +206,7 @@ curl -X POST http://localhost:8000/api/v1/auth/register \
 ### 2. Login
 
 ```bash
-curl -X POST http://localhost:8000/api/v1/auth/login \
+curl -X POST http://localhost:8000/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "login": "test@example.com",
@@ -219,7 +219,7 @@ Save the `access_token` from response!
 ### 3. Get Current User
 
 ```bash
-curl -X GET http://localhost:8000/api/v1/auth/me \
+curl -X GET http://localhost:8000/api/auth/me \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
